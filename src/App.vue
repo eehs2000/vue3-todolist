@@ -10,7 +10,7 @@
     <hr />
     <TodoForm @add-todo="addTodo" />
     <TodoList
-      :todos="filteredTodos"
+      :todos="todos"
       :onCheckStyle="onCheckStyle"
       @toggle-todo="toggleTodo"
       @delete-todo="deleteTodo"
@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { computed, ref, watchEffect } from "vue";
+import { computed, ref, watch } from "vue";
 import axios from "axios";
 import TodoForm from "./components/TodoForm.vue";
 import TodoList from "./components/TodoList.vue";
@@ -67,10 +67,7 @@ export default {
     const numOfPages = computed(() => {
       return Math.ceil(numOfTodos.value / limit);
     });
-
-    watchEffect(() => {
-      console.log(currentPage.value);
-    });
+    const searchText = ref("");
 
     const onCheckStyle = {
       textDecoration: "line-through",
@@ -81,7 +78,7 @@ export default {
       currentPage.value = page;
       try {
         const res = await axios.get(
-          `http://localhost:3000/todos?_page=${page}&_limit=${limit}`
+          `http://localhost:3000/todos?subject_like=${searchText.value}&_page=${page}&_limit=${limit}`
         );
         numOfTodos.value = res.headers["x-total-count"];
         todos.value = res.data;
@@ -135,16 +132,17 @@ export default {
       }
     };
 
-    const searchText = ref("");
-
-    const filteredTodos = computed(() => {
-      if (searchText.value) {
-        return todos.value.filter((todo) => {
-          return todo.subject.includes(searchText.value);
-        });
-      }
-      return todos.value;
+    watch(searchText, () => {
+      getTodos(1);
     });
+    // const filteredTodos = computed(() => {
+    //   if (searchText.value) {
+    //     return todos.value.filter((todo) => {
+    //       return todo.subject.includes(searchText.value);
+    //     });
+    //   }
+    //   return todos.value;
+    // });
 
     return {
       todos,
@@ -153,7 +151,7 @@ export default {
       addTodo,
       toggleTodo,
       searchText,
-      filteredTodos,
+      // filteredTodos,
       getTodos,
       numOfPages,
       currentPage,

@@ -11,7 +11,7 @@
           />
         </div>
         <div>
-          <button class="btn btn-primary" type="submit">add</button>
+          <button class="btn btn-primary mx-1" type="submit">add</button>
         </div>
       </div>
       <div v-show="hasError">Error</div>
