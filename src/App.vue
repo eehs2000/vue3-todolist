@@ -1,26 +1,89 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="container">
+    <h2>To-Do List</h2>
+    <input
+      class="form-control"
+      v-model="searchText"
+      type="text"
+      placeholder="search"
+    />
+    <hr />
+    <TodoForm @add-todo="addTodo" />
+    <TodoList
+      :todos="filteredTodos"
+      @toggle-todo="toggleTodo"
+      @delete-todo="deleteTodo"
+    />
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import { computed, ref } from "vue";
+import axios from "axios";
+import TodoForm from "./components/TodoForm.vue";
+import TodoList from "./components/TodoList.vue";
 
 export default {
-  name: 'App',
   components: {
-    HelloWorld
-  }
-}
+    TodoForm,
+    TodoList,
+  },
+  setup() {
+    const todos = ref([]);
+
+    const onCheckStyle = {
+      textDecoration: "line-through",
+      color: "gray",
+    };
+
+    const addTodo = async (todo) => {
+      try {
+        const res = await axios.post("http://localhost:3000/todos", {
+          subject: todo.subject,
+          completed: todo.completed,
+        });
+        todos.value.push(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+
+      // .then((res) => {
+      //   todos.value.push(res.data);
+      //   console.log(res);
+      // })
+      // .catch((err) => console.log(err));
+    };
+
+    const deleteTodo = (index) => {
+      todos.value.splice(index, 1);
+    };
+
+    const toggleTodo = (index) => {
+      todos.value[index].completed = !todos.value[index].completed;
+    };
+
+    const searchText = ref("");
+
+    const filteredTodos = computed(() => {
+      if (searchText.value) {
+        return todos.value.filter((todo) => {
+          return todo.subject.includes(searchText.value);
+        });
+      }
+      return todos.value;
+    });
+
+    return {
+      todos,
+      onCheckStyle,
+      deleteTodo,
+      addTodo,
+      toggleTodo,
+      searchText,
+      filteredTodos,
+    };
+  },
+};
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+<style></style>
