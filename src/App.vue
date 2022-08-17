@@ -135,8 +135,12 @@ export default {
       }
     };
 
+    let timeout = null;
     watch(searchText, () => {
-      getTodos(1);
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        getTodos(1);
+      }, 1000);
     });
     // const filteredTodos = computed(() => {
     //   if (searchText.value) {
