@@ -30,6 +30,7 @@ export default {
       type: Array,
       required: true,
     },
+    onCheckStyle: {},
   },
   emits: ["toggle-todo", "delete-todo"],
   setup(props, { emit }) {

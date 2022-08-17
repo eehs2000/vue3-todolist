@@ -11,6 +11,7 @@
     <TodoForm @add-todo="addTodo" />
     <TodoList
       :todos="filteredTodos"
+      :onCheckStyle="onCheckStyle"
       @toggle-todo="toggleTodo"
       @delete-todo="deleteTodo"
     />
@@ -48,7 +49,7 @@
 </template>
 
 <script>
-import { computed, ref } from "vue";
+import { computed, ref, watchEffect } from "vue";
 import axios from "axios";
 import TodoForm from "./components/TodoForm.vue";
 import TodoList from "./components/TodoList.vue";
@@ -65,6 +66,10 @@ export default {
     const currentPage = ref(1);
     const numOfPages = computed(() => {
       return Math.ceil(numOfTodos.value / limit);
+    });
+
+    watchEffect(() => {
+      console.log(currentPage.value);
     });
 
     const onCheckStyle = {
