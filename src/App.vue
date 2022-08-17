@@ -78,7 +78,7 @@ export default {
       currentPage.value = page;
       try {
         const res = await axios.get(
-          `http://localhost:3000/todos?subject_like=${searchText.value}&_page=${page}&_limit=${limit}`
+          `http://localhost:3000/todos?_sort=id&_order=desc&subject_like=${searchText.value}&_page=${page}&_limit=${limit}`
         );
         numOfTodos.value = res.headers["x-total-count"];
         todos.value = res.data;
@@ -97,6 +97,7 @@ export default {
           completed: todo.completed,
         });
         console.log(res);
+        getTodos();
         // todos.value.push(res.data);
       } catch (err) {
         console.log(err);
@@ -112,7 +113,8 @@ export default {
       const id = todos.value[index].id;
       try {
         const res = await axios.delete("http://localhost:3000/todos/" + id);
-        todos.value.splice(index, 1);
+        getTodos();
+        // todos.value.splice(index, 1);
         console.log(res);
       } catch (error) {
         console.log(error);
@@ -126,7 +128,8 @@ export default {
           completed: !todos.value[index].completed,
         });
         console.log(res);
-        todos.value[index].completed = !todos.value[index].completed;
+        getTodos();
+        // todos.value[index].completed = !todos.value[index].completed;
       } catch (error) {
         console.log(error);
       }

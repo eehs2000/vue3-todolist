@@ -21,11 +21,6 @@
       "id": 4
     },
     {
-      "subject": "5",
-      "completed": false,
-      "id": 5
-    },
-    {
       "subject": "6",
       "completed": false,
       "id": 6
@@ -36,19 +31,9 @@
       "id": 7
     },
     {
-      "subject": "8",
-      "completed": false,
-      "id": 8
-    },
-    {
       "subject": "9",
       "completed": false,
       "id": 9
-    },
-    {
-      "subject": "1o",
-      "completed": false,
-      "id": 10
     },
     {
       "subject": "steal banana",
@@ -64,6 +49,11 @@
       "subject": "go home",
       "completed": true,
       "id": 13
+    },
+    {
+      "subject": "yeah",
+      "completed": false,
+      "id": 14
     }
   ]
 }
