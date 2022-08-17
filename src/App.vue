@@ -14,6 +14,36 @@
       @toggle-todo="toggleTodo"
       @delete-todo="deleteTodo"
     />
+    <hr />
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        <li class="page-item">
+          <a
+            class="page-link"
+            href="#"
+            @click="currentPage !== 1 ? getTodos(currentPage - 1) : ''"
+          >
+            Previous
+          </a>
+        </li>
+        <li
+          class="page-item"
+          v-for="page in numOfPages"
+          :key="page"
+          :class="currentPage === page ? 'active' : ''"
+        >
+          <a class="page-link" href="#" @click="getTodos(page)">{{ page }}</a>
+        </li>
+        <li class="page-item">
+          <a
+            class="page-link"
+            href="#"
+            @click="currentPage !== numOfPages ? getTodos(currentPage + 1) : ''"
+            >Next</a
+          >
+        </li>
+      </ul>
+    </nav>
   </div>
 </template>
 
@@ -30,15 +60,25 @@ export default {
   },
   setup() {
     const todos = ref([]);
+    const numOfTodos = ref(0);
+    const limit = 5;
+    const currentPage = ref(1);
+    const numOfPages = computed(() => {
+      return Math.ceil(numOfTodos.value / limit);
+    });
 
     const onCheckStyle = {
       textDecoration: "line-through",
       color: "gray",
     };
 
-    const getTodos = async () => {
+    const getTodos = async (page = currentPage.value) => {
+      currentPage.value = page;
       try {
-        const res = await axios.get("http://localhost:3000/todos");
+        const res = await axios.get(
+          `http://localhost:3000/todos?_page=${page}&_limit=${limit}`
+        );
+        numOfTodos.value = res.headers["x-total-count"];
         todos.value = res.data;
         return res;
       } catch (error) {
@@ -54,7 +94,8 @@ export default {
           subject: todo.subject,
           completed: todo.completed,
         });
-        todos.value.push(res.data);
+        console.log(res);
+        // todos.value.push(res.data);
       } catch (err) {
         console.log(err);
       }
@@ -109,6 +150,8 @@ export default {
       searchText,
       filteredTodos,
       getTodos,
+      numOfPages,
+      currentPage,
     };
   },
 };
