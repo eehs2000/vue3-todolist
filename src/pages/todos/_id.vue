@@ -16,11 +16,13 @@
 import axios from "axios";
 import { useRoute, useRouter } from "vue-router";
 import { ref } from "@vue/reactivity";
+
 export default {
   setup() {
     const route = useRoute();
     const router = useRouter();
     const todo = ref(null);
+    const originalTodo = ref(null);
 
     const getTodo = async () => {
       try {
@@ -59,6 +61,7 @@ export default {
       todo,
       editTodo,
       moveToHome,
+      originalTodo,
     };
   },
 };
