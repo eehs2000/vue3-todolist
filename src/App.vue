@@ -36,6 +36,18 @@ export default {
       color: "gray",
     };
 
+    const getTodos = async () => {
+      try {
+        const res = await axios.get("http://localhost:3000/todos");
+        todos.value = res.data;
+        return res;
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getTodos();
+
     const addTodo = async (todo) => {
       try {
         const res = await axios.post("http://localhost:3000/todos", {
@@ -46,7 +58,6 @@ export default {
       } catch (err) {
         console.log(err);
       }
-
       // .then((res) => {
       //   todos.value.push(res.data);
       //   console.log(res);
@@ -54,8 +65,15 @@ export default {
       // .catch((err) => console.log(err));
     };
 
-    const deleteTodo = (index) => {
-      todos.value.splice(index, 1);
+    const deleteTodo = async (index) => {
+      const id = todos.value[index].id;
+      try {
+        const res = await axios.delete("http://localhost:3000/todos/" + id);
+        todos.value.splice(index, 1);
+        console.log(res);
+      } catch (error) {
+        console.log(error);
+      }
     };
 
     const toggleTodo = (index) => {
@@ -81,6 +99,7 @@ export default {
       toggleTodo,
       searchText,
       filteredTodos,
+      getTodos,
     };
   },
 };

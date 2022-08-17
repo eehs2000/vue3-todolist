@@ -19,11 +19,6 @@
       "subject": "buy milk",
       "completed": false,
       "id": 4
-    },
-    {
-      "subject": "hi",
-      "completed": false,
-      "id": 5
     }
   ]
 }
